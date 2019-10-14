@@ -20,10 +20,10 @@ template<typename T, std::size_t FixedStorageSize = 256>
 class recursive_wrapper {
 public:
 	recursive_wrapper()
+		: storage_strategy_{ 
+			impl::use_internal_storage_v<T, sizeof(decltype(storage_)), alignof(decltype(storage_))>
+				? &internal_storage_strategy : &external_storage_strategy }
 	{
-		storage_strategy_ = impl::use_internal_storage_v<T, sizeof(decltype(storage_)), alignof(decltype(storage_))>
-			? &internal_storage_strategy : &external_storage_strategy;
-
 		storage_strategy_(storage_, storage_operation::CONSTRUCT, nullptr);
 	}
 
